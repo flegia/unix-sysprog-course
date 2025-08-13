@@ -3,13 +3,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <errno.h>
+#include <string.h>
 
 #define BUF_SIZE 1024
 
 int main(int argc, char* argv[]) {
 	int output_dst;
 
-	if ((argc != 2) && (argc != 3)) {
+	if ((argc < 2) || (argc > 3)) {
 		fprintf(stderr, "Usage: %s <source> <dest>\n", argv[0]);
 		exit(EXIT_FAILURE);
 	}
@@ -20,7 +21,8 @@ int main(int argc, char* argv[]) {
 
 	int src = open(argv[1], O_RDONLY);
 	if (src == -1) {
-		perror("open source");
+		fprintf(stderr, "Error opening %s: %s\n", argv[1], strerror(errno));
+		close(src);
 		exit(EXIT_FAILURE);
 	}
 	
@@ -48,16 +50,20 @@ int main(int argc, char* argv[]) {
 
 	close(src);
 	close(dst);
-	return 0;
+	exit(EXIT_SUCCESS);
 	}
 	} else {
 		char buffer[BUF_SIZE];
 		ssize_t bytes;
 		while ((bytes = read(src,buffer,BUF_SIZE)) >0) {
-			puts(buffer);
+			if (write(STDOUT_FILENO, buffer, bytes) != bytes) {
+				perror("write stdout");
+				close(src);
+				exit(EXIT_FAILURE);
+			}
 		}
 		close(src);
-		return 0;
+		exit(EXIT_SUCCESS);
 	}
 
 }
