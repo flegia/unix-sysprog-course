@@ -16,11 +16,14 @@ This week focuses on:
 A file copy tool:
 - Usage:
   bash
-  ./copy <source> <destination>    # Copy to file
-  ./copy <source>                  # Output to stdout
+
+  ./copy source destination ::     Copy to file
+  
+  ./copy source             ::     Output to stdout
   
 ### fd_info.c
 Opens a file, prints its file descriptor, reads 10 bytes and prints them to standard output in hex.
 - Usage:
   bash
-  ./fd_info <file>
+  
+  ./fd_info file
