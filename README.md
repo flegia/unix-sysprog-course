@@ -37,14 +37,11 @@ Opens a file, prints its file descriptor, reads 10 bytes and prints them to stan
 - Finds the first empty room and empty room total.
 - Allows booking occupants with `setoccupant`.
 
-### Build
+### Build & Usage
 
 ```bash
 gcc hotel.c rooms.c globals.c -o hotel
 
-### Usage
-
-```bash
 ./hotel list
 ./hotel book ROOMNO "NAME"
 ./hotel free ROOMNO
