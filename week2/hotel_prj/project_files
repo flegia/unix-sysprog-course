@@ -1,0 +1,97 @@
+//<globals.c>
+#define NAMELENGTH 19
+
+char* empty = "empty\0";
+const char* filename = "residents.txt";
+int fd = -1;
+
+//<rooms.c>
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include "globals.h"
+
+#define NROOMS 10
+#define NAMELENGTH 19
+
+char namebuf[NAMELENGTH];
+
+char* getoccupant(int roomno) {
+	
+        off_t offset;
+        ssize_t nread;
+        unsigned int empty_flag = 0;
+
+        if ( fd == -1 && (fd = open(filename, O_RDONLY)) == -1) {
+                printf("Couldn't open file error\n");
+                return (NULL);
+        }
+
+        offset = (roomno - 1) * NAMELENGTH;
+
+        if (lseek(fd, offset, SEEK_SET) == -1)
+                return (NULL);
+
+        if ((nread = read(fd, namebuf, NAMELENGTH)) <= 0)
+                return (NULL);
+
+        for (int i = 0; i<(nread-1); i++) {
+                if ((namebuf[i] != ' ') && (namebuf[i] != '\n')) {
+                        empty_flag = 1;
+                }
+        }
+
+        if (empty_flag == 0)
+                return(empty);
+        namebuf[nread-1] = '\0';
+        return(namebuf);
+}
+
+//<hotel.c>
+#include <stdio.h>
+#include <fcntl.h>
+#include <unistd.h>
+#include <string.h>
+#include <time.h>
+#include <sys/stat.h>
+#include "rooms.h"
+#include "globals.h"
+
+#define NROOMS 10
+#define NAMELENGTH 19 
+
+int main() {
+	int j, cmp;
+	char* p;
+	int nfound,find;
+	nfound = 0;
+
+	for (j = 1; j <= NROOMS; j++) {
+		p = getoccupant(j);
+		cmp = strcmp(p,empty);
+		if (cmp != 0)
+			printf("Room %2d, %s\n", j, p);
+		else if (cmp == 0) {
+			printf("Room %2d: empty\n", j);
+			if (nfound == 0) {
+				find = j;
+			}
+			nfound++;
+		}
+		else
+			printf("Error on room %d\n", j);
+	}
+
+	struct stat file_info;
+	if (stat(filename, &file_info) == 0) {
+		printf("File: %s\n", filename);
+		printf("Size: %lld bytes\n", (long long)file_info.st_size);
+		printf("Last modified: %s", ctime(&file_info.st_mtime));
+	} else {
+		perror("stat");
+	}
+
+	printf("The first empty room is %d\n", find);
+	printf("The number of empty rooms is %d\n", nfound);
+	return 0;
+}
