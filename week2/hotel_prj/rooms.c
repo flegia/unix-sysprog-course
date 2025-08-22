@@ -53,8 +53,14 @@ void setoccupant(int roomno, const char* name) {
 
 	if (lseek(fd, offset, SEEK_SET) == -1)
 		return;
-	namebuf[0] = '\0';
-	strcat(namebuf, name);
+	
+	memset(namebuf, ' ', NAMELENGTH);
+	namebuf[NAMELENGTH-1] = '\n';
+
+	if (strlen(name) > 0) {
+		strncpy(namebuf, name, NAMELENGTH - 1);
+	}
+
 	write(fd, namebuf, NAMELENGTH);
 	return;
 }
