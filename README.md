@@ -41,3 +41,12 @@ Opens a file, prints its file descriptor, reads 10 bytes and prints them to stan
 
 ```bash
 gcc hotel.c rooms.c globals.c -o hotel
+
+### Usage
+
+```bash
+./hotel list
+./hotel book ROOMNO "NAME"
+./hotel free ROOMNO
+./hotel info
+
