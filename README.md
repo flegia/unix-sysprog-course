@@ -27,3 +27,17 @@ Opens a file, prints its file descriptor, reads 10 bytes and prints them to stan
   bash
   
   ./fd_info file
+
+## Week 2 - Unix Hotel Project
+
+### Features
+
+- Reads hotel rooms from "residents.txt"
+- Displays occupied and empty rooms.
+- Finds the first empty room and empty room total.
+- Allows booking occupants with `setoccupant`.
+
+### Build
+
+```bash
+gcc hotel.c rooms.c globals.c -o hotel
