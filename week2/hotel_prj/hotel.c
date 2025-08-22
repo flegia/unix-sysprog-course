@@ -18,6 +18,7 @@ int main(int argc, char* argv[]) {
 		printf(" %s list\n", argv[0]);
 		printf(" %s book ROOMNO NAME\n", argv[0]);
 		printf(" %s free ROOMNO\n", argv[0]);
+		printf(" %s info\n", argv[0]);
 		return 1;
 	}
 
